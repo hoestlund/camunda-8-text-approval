@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: text-approval-app
+
+camunda:
+  client:
+    mode: selfManaged
+    grpc-address: http://localhost:26500
+
+logging:
+  level:
+    io.camunda.zeebe: DEBUG
+    com.example: INFO
