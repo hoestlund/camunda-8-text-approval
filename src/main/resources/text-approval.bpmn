@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0d2se20" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+  <bpmn:collaboration id="text-approval">
+    <bpmn:participant id="textApprovalParticipant" name="Text Approval Process" processRef="textApprovalProcess" />
+  </bpmn:collaboration>
+  <bpmn:process id="textApprovalProcess" isExecutable="true">
+    <bpmn:serviceTask id="t_checkBadWords" name="Check &#34;bad words&#34; in text" camunda:type="external" camunda:topic="checkBadWords">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="textToCheck">${inputText}</camunda:inputParameter>
+          <camunda:outputParameter name="badWordsFound">${badWordsFound}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1klu1e7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wgzato</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1klu1e7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="t_manualApproval" name="Manually approve text">
+      <bpmn:incoming>Flow_0wgzato</bpmn:incoming>
+      <bpmn:outgoing>Flow_11ceep1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_0dz46yo" name="Text approved?">
+      <bpmn:incoming>Flow_11ceep1</bpmn:incoming>
+      <bpmn:outgoing>no_textApproved</bpmn:outgoing>
+      <bpmn:outgoing>yes_textApproved</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="t_sendText" name="Send text">
+      <bpmn:incoming>yes_textApproved</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fnbycl</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_1ft3usx" name="Text not sent">
+      <bpmn:incoming>no_textApproved</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_00hj8kn" name="Text sent">
+      <bpmn:incoming>Flow_1fnbycl</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1klu1e7" sourceRef="StartEvent_1" targetRef="t_checkBadWords" />
+    <bpmn:sequenceFlow id="Flow_0wgzato" sourceRef="t_checkBadWords" targetRef="t_manualApproval" />
+    <bpmn:sequenceFlow id="Flow_11ceep1" sourceRef="t_manualApproval" targetRef="Gateway_0dz46yo" />
+    <bpmn:sequenceFlow id="no_textApproved" name="No" sourceRef="Gateway_0dz46yo" targetRef="Event_1ft3usx">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="yes_textApproved" name="Yes" sourceRef="Gateway_0dz46yo" targetRef="t_sendText">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1fnbycl" sourceRef="t_sendText" targetRef="Event_00hj8kn" />
+    <bpmn:textAnnotation id="TextAnnotation_1wrdnnf">
+      <bpmn:text>Starts with input text</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_01mx3u4">
+      <bpmn:text>Manual approval. The recommendation of the previous task should be provided</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_1oimjr6">
+      <bpmn:text>The text should be "sent", this can be also just printed to the console</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0ni81dx" sourceRef="StartEvent_1" targetRef="TextAnnotation_1wrdnnf" />
+    <bpmn:association id="Association_11sv27j" sourceRef="t_manualApproval" targetRef="TextAnnotation_01mx3u4" />
+    <bpmn:association id="Association_1iayp6u" sourceRef="t_sendText" targetRef="TextAnnotation_1oimjr6" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="text-approval">
+      <bpmndi:BPMNShape id="Participant_0oz71e6_di" bpmnElement="textApprovalParticipant" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="820" height="410" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1wrdnnf_di" bpmnElement="TextAnnotation_1wrdnnf">
+        <dc:Bounds x="200" y="260" width="100" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_01mx3u4_di" bpmnElement="TextAnnotation_01mx3u4">
+        <dc:Bounds x="480" y="200" width="120" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1oimjr6_di" bpmnElement="TextAnnotation_1oimjr6">
+        <dc:Bounds x="740" y="110" width="100" height="82" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1klu1e7_di" bpmnElement="Flow_1klu1e7">
+        <di:waypoint x="268" y="350" />
+        <di:waypoint x="320" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wgzato_di" bpmnElement="Flow_0wgzato">
+        <di:waypoint x="420" y="350" />
+        <di:waypoint x="480" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11ceep1_di" bpmnElement="Flow_11ceep1">
+        <di:waypoint x="580" y="350" />
+        <di:waypoint x="645" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w4f1mi_di" bpmnElement="no_textApproved">
+        <di:waypoint x="670" y="375" />
+        <di:waypoint x="670" y="430" />
+        <di:waypoint x="882" y="430" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="678" y="400" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14dqh35_di" bpmnElement="yes_textApproved">
+        <di:waypoint x="670" y="325" />
+        <di:waypoint x="670" y="260" />
+        <di:waypoint x="740" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="676" y="290" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fnbycl_di" bpmnElement="Flow_1fnbycl">
+        <di:waypoint x="840" y="260" />
+        <di:waypoint x="882" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0ojjqw1_di" bpmnElement="t_checkBadWords">
+        <dc:Bounds x="320" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="232" y="332" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0fppsub_di" bpmnElement="t_manualApproval">
+        <dc:Bounds x="480" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0dz46yo_di" bpmnElement="Gateway_0dz46yo" isMarkerVisible="true">
+        <dc:Bounds x="645" y="325" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="705" y="343" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pmjgkf_di" bpmnElement="t_sendText">
+        <dc:Bounds x="740" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ft3usx_di" bpmnElement="Event_1ft3usx">
+        <dc:Bounds x="882" y="412" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="869" y="455" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_00hj8kn_di" bpmnElement="Event_00hj8kn">
+        <dc:Bounds x="882" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="878" y="285" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0ni81dx_di" bpmnElement="Association_0ni81dx">
+        <di:waypoint x="250" y="332" />
+        <di:waypoint x="250" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_11sv27j_di" bpmnElement="Association_11sv27j">
+        <di:waypoint x="530" y="310" />
+        <di:waypoint x="530" y="282" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1iayp6u_di" bpmnElement="Association_1iayp6u">
+        <di:waypoint x="790" y="220" />
+        <di:waypoint x="790" y="192" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
