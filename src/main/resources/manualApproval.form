@@ -1,0 +1,56 @@
+{
+  "components": [
+    {
+      "label": "Bad words found?",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_1ewt8mg",
+        "columns": null
+      },
+      "id": "Field_0ha40ei",
+      "key": "badWordsFound",
+      "readonly": true
+    },
+    {
+      "label": "Submitted text",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1ewt8mg",
+        "columns": null
+      },
+      "id": "Field_1f9y3ch",
+      "key": "inputText",
+      "readonly": true,
+      "description": "Review and approve/reject"
+    },
+    {
+      "label": "Approve text",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_14ukbkq",
+        "columns": null
+      },
+      "id": "Field_0hc8inr",
+      "key": "approved"
+    },
+    {
+      "label": "Submit",
+      "action": "submit",
+      "type": "button",
+      "layout": {
+        "row": "Row_09qbp1q",
+        "columns": null
+      },
+      "id": "Field_05a6ncz"
+    }
+  ],
+  "type": "default",
+  "id": "manualApproval",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.41.0"
+  },
+  "schemaVersion": 19
+}

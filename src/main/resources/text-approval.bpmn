@@ -36,13 +36,12 @@
     <bpmn:userTask id="t_manualApproval" name="Manually approve task">
       <bpmn:extensionElements>
         <zeebe:userTask />
+        <zeebe:formDefinition formId="manualApproval" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_07viri5</bpmn:incoming>
       <bpmn:outgoing>Flow_0ead8j6</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="no_textApproved" name="No" sourceRef="Gateway_0auk03a" targetRef="Event_0fl5tou">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=approved = false</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="no_textApproved" name="No" sourceRef="Gateway_0auk03a" targetRef="Event_0fl5tou" />
     <bpmn:serviceTask id="t_sendText" name="Send text">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="sendText" />
@@ -53,7 +52,7 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_1khs8p2</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:exclusiveGateway id="Gateway_0auk03a" name="Text approved?">
+    <bpmn:exclusiveGateway id="Gateway_0auk03a" name="Text approved?" default="no_textApproved">
       <bpmn:incoming>Flow_0ead8j6</bpmn:incoming>
       <bpmn:outgoing>yes_textApproved</bpmn:outgoing>
       <bpmn:outgoing>no_textApproved</bpmn:outgoing>
